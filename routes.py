@@ -40,20 +40,15 @@ def home():
         auth_response = authFlow(code) # gère l'authentification de l'utilisateur
         if auth_response:
             return auth_response
-        
-        print("Auth floaw succefully passed")
-        
+                
         guilds_owned, icons = showGuilds() # affiche les serveurs de l'utilisateur
-                
-        print("Guilds shown")
-                
+                                
         webHooks = None
-        if server_id != None:
+        if server_id:
             webHooks = showGuildWebHooks(guilds_owned, server_id)
             if type(webHooks) == Response:
                 return webHooks
         
-        print("Webhooks shown: "+ webHooks)
         if (webHooks):
             return render_template("index.html", guilds=icons,webHooks=webHooks)
         else:
@@ -159,7 +154,7 @@ def getGuildWebHooks(guild_id):
 
 def getWebHookAvatar(avatarRes) -> str:
     avatar = "'/static/images/default logo.png'"
-    if (avatarRes != None):
+    if (avatarRes['avatar']):
         avatar=f"https://cdn.discordapp.com/avatars/{avatarRes['id']}/{avatarRes['avatar']}.png?size=64"
     return avatar
         
