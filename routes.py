@@ -37,38 +37,18 @@ def home():
         server_id = request.args.get('id')
         webhook_id = request.args.get('webhook_id')          
             
-        showGuilds() # affiche les serveurs de l'utilisateur
+        authFlow(code) # gère l'authentification de l'utilisateur
+            
+        guilds_owned, icons = showGuilds() # affiche les serveurs de l'utilisateur
                 
         if server_id != None:
-            guild_s = guilds_owned[int(server_id)]
-            headers = {
-                "Authorization": f"Bot {BOT_TOKEN}"
-            }
-            response = requests.get("https://discord.com/api/v10/users/@me/guilds", headers=headers)
-            
-            if response.status_code == 200:
-                guilds = response.json()
-                if any(guild["id"] == guild_s['id'] for guild in guilds):
-                    response = requests.get(f"https://discord.com/api/v10/guilds/{guild_s['id']}/webhooks", headers=headers)
-                    webHooks = []
-                    id = 0
-                    for res in response.json():
-                        if (res['type'] == 1):
-                            avatar = ""
-                            if (res['avatar'] == None):
-                                avatar="'/static/images/default logo.png'"
-                            else:
-                                avatar=f"https://cdn.discordapp.com/avatars/{res['id']}/{res['avatar']}.png?size=64"
-                            webHooks.append([id, res['name'], avatar])
-                            id += 1
-                    return render_template("index.html", guilds=icons, webHooks=webHooks)
-                    
-                else:                    
-                    return redirect(f"https://discord.com/oauth2/authorize?client_id=1317851690136764487&permissions=536870912&integration_type=0&scope=bot&guild_id={guild_s['id']}&disable_guild_select=true&redirect_uri=http%3A%2F%2F192.168.1.18%2F")
-                    
-                    
+            webHooks = showGuildWebHooks(guilds_owned, server_id)      
         
-        return render_template("index.html", guilds=icons)
+        
+        if (webHooks):
+            return render_template("index.html", guilds=icons,webHooks=webHooks)
+        else:
+            return render_template("index.html", guilds=icons)
         
     except:
         print("error !")
@@ -135,3 +115,42 @@ def showGuilds():
             # print(res.json())
             icons.append([id,f"https://cdn.discordapp.com/icons/{guild["id"]}/{guild["icon"]}.png?size=64"])
             id += 1
+    return guilds_owned, icons 
+
+def showGuildWebHooks(guilds_owned : list, server_id : int):
+    targetedGuild = guilds_owned[int(server_id)]
+    guilds = getBotGuilds()
+    if any(guild["id"] == targetedGuild['id'] for guild in guilds): # vérifie si le bot est dans le serveur
+        guildWebHooks = getGuildWebHooks(targetedGuild['id'])
+        webHooks = []
+        id = 0
+        for res in guildWebHooks:
+            if (res['type'] == 1): # vérifie si c'est un webhook pour envoyer des messages
+                avatar = getWebHookAvatar(res)
+                webHooks.append([id, res['name'], avatar])
+                id += 1
+        return webHooks
+            
+    else:                    
+        return redirect(f"https://discord.com/oauth2/authorize?client_id=1317851690136764487&permissions=536870912&integration_type=0&scope=bot&guild_id={targetedGuild['id']}&disable_guild_select=true&redirect_uri=http%3A%2F%2F192.168.1.18%2F")
+                
+def getBotGuilds():
+    headers = {
+        "Authorization": f"Bot {BOT_TOKEN}"
+    }
+    response = requests.get("https://discord.com/api/v10/users/@me/guilds", headers=headers)
+    if response.status_code == 200:
+        return response.json()
+    
+def getGuildWebHooks(guild_id):
+    headers = {
+        "Authorization": f"Bot {BOT_TOKEN}"
+    }
+    return requests.get(f"https://discord.com/api/v10/guilds/{guild_id}/webhooks", headers=headers).json()
+
+def getWebHookAvatar(avatarRes) -> str:
+    avatar = "'/static/images/default logo.png'"
+    if (avatarRes != None):
+        avatar=f"https://cdn.discordapp.com/avatars/{avatarRes['id']}/{avatarRes['avatar']}.png?size=64"
+    return avatar
+        
