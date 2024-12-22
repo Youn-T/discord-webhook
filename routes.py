@@ -117,7 +117,10 @@ def showGuilds():
             guilds_owned.append(guild)
             # res = requests.get(f"https://discord.com/api/v10/guilds/{guild["id"]}/webhooks", headers=headers)
             # print(res.json())
-            icons.append([id,f"https://cdn.discordapp.com/icons/{guild["id"]}/{guild["icon"]}.png?size=64"])
+            if (guild["icon"]):
+                icons.append([id,f"https://cdn.discordapp.com/icons/{guild["id"]}/{guild["icon"]}.png?size=64"])
+            else:
+                icons.append([id,f"{getFirstLetter(guild['name'])}"])
             id += 1
     return guilds_owned, icons 
 
@@ -158,3 +161,6 @@ def getWebHookAvatar(avatarRes) -> str:
         avatar=f"https://cdn.discordapp.com/avatars/{avatarRes['id']}/{avatarRes['avatar']}.png?size=64"
     return avatar
         
+def getFirstLetter(word: str) -> str:
+    lst = word.split()
+    return ''.join([ wrd[0] for wrd in lst ])
