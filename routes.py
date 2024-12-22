@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, request, session, url_for
+from flask import Flask, Response, redirect, render_template, request, session, url_for
 import requests
 from dotenv import load_dotenv
 import os
@@ -37,14 +37,23 @@ def home():
         server_id = request.args.get('id')
         webhook_id = request.args.get('webhook_id')          
             
-        authFlow(code) # gère l'authentification de l'utilisateur
-            
+        auth_response = authFlow(code) # gère l'authentification de l'utilisateur
+        if auth_response:
+            return auth_response
+        
+        print("Auth floaw succefully passed")
+        
         guilds_owned, icons = showGuilds() # affiche les serveurs de l'utilisateur
                 
+        print("Guilds shown")
+                
+        webHooks = None
         if server_id != None:
-            webHooks = showGuildWebHooks(guilds_owned, server_id)      
+            webHooks = showGuildWebHooks(guilds_owned, server_id)
+            if type(webHooks) == Response:
+                return webHooks
         
-        
+        print("Webhooks shown: "+ webHooks)
         if (webHooks):
             return render_template("index.html", guilds=icons,webHooks=webHooks)
         else:
