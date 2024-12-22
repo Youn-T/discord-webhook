@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <title>Document</title>
+</head>
+
+<body class="body">
+    <!-- <div class="container">
+        <h1>WEBHOOK SENDER</h1>
+        <h2>Enter webhook url</h2>
+        <form action="{{ url_for('send') }}" method="post">
+            <input id="webhook-url" name="webhook-url" type="text" class="input">
+
+            <h2>Enter message</h2>
+            <textarea id="message" name="message" class="input" style="resize: none;height: 200px;font-size: 20px;"></textarea>
+            <button type="submit" class="bouton">SEND</button>
+        </form>
+    </div> -->
+    <div class="head">
+        <img src="{{ url_for('static', filename='images/discord logo.png') }}" class="logo"></img>
+        <h1 class="title">Discord Webhook</h1>
+    </div>
+    <div class="page">
+        <div class="guilds">
+            {% for icon in guilds %}
+            <div class="guild">
+                <div style="background-image: url({{icon[1]}});" class="guild_icon"><a href="/?id={{icon[0]}}" style="width: 100%; height: 100%; display: block;"></a></div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="webhook">
+            {% if webHooks %}
+                {% for hook in webHooks %}
+                <a class="webhook_name" href="x">
+                    <div style="background-image: url({{hook[2]}})" class="webhook_avatar"></div>
+                    <span>{{hook[1]}}</span>
+                </a>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="message">
+
+        </div>
+    </div>
+</body>
+
+</html>

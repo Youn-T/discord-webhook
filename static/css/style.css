@@ -1,0 +1,148 @@
+body {
+    font-family: "gg sans","Noto Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+    min-height: 100%;
+    background-color: #313338;
+    color: white;
+    margin: 0px;
+}
+.container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center
+}
+.input {
+    font-size: 30px;
+    color: white;
+    padding: 10px;
+    background-color: #1e1f22;
+    border-radius: 10px;
+    border: none;
+    width: 70%;
+    border-color: .2s ease-in-out
+}
+
+.input:focus {
+    outline: none;
+}
+
+.bouton {
+    color: white;
+    border-radius: 10px;
+    background-color: #4a55cb;
+    border: none;
+    margin: 20px;
+    height: 50px;
+    width: 30%;
+    /* padding: 20px; */
+}
+
+form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center
+}
+
+/* =================================================================================== */
+
+.guilds {
+    align-items: center;
+    background-color: #202225;
+    height: 100%;
+    min-width: 72px;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.webhook {
+    min-width: 300px;
+    background-color: #2f3337;
+    height: 100%;
+}
+
+.message {
+    background-color: #383c41;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 8px 8px 8px 0;
+    position: relative;
+    transition: none;
+    z-index: 2;
+}
+
+.page {
+    position: absolute;
+    height: calc(100dvh - 72px);
+    display: flex;
+    width: 100%;
+}
+
+.head {
+    min-height: 72px;
+    align-items: center;
+    background-color: #202225;
+    display: flex;
+    height: var(--header-height);
+    justify-content: space-between;
+    padding: 0 30px;
+    position: relative;
+    transition: height .3s ease-in-out;
+    z-index: 1002;
+}
+
+.guild_icon {
+    background-size: 48px;
+    border-radius: 24px;
+    height: 48px;
+    transition: border-radius .2s ease-out;
+    width: 48px;
+}
+
+.guild_icon:hover {
+    border-radius: 16px;
+}
+
+.guild {
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    width: 72px;
+    height: 48px;
+    margin-top: 16px;
+}
+
+.logo {
+    width: 48px;
+}
+
+.title {
+    font-size: 20px;
+}
+
+.webhook_name {
+    color: inherit;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: 14px 16px 14px 24px;
+}
+
+.webhook_name a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.webhook_avatar {
+    background-size: 40px;
+    border-radius: 20px;
+    height: 40px;
+    margin-right: 16px;
+    width: 40px;
+}
