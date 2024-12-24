@@ -47,7 +47,7 @@
         <div class="webhook">
             {% if webHooks %}
             {% for hook in webHooks %}
-            <a class="webhook_name" href="x">
+            <a class="webhook_name" href="/?id={{request.args.get('id')}}&webhook_id={{hook[0]}}">
                 <div style="background-image: url({{hook[2]}})" class="webhook_avatar"></div>
                 <span>{{hook[1]}}</span>
             </a>
@@ -55,7 +55,16 @@
             {% endif %}
         </div>
         <div class="message">
+            {% if webhook %}
+            <form action="{{ url_for('send') }}" method="post">
+                <input id="webhook-url" name="webhook-url" type="text" class="hidden" placeholder="{{webhook}}"
+                    value="{{webhook}}" readonly>
 
+                <textarea id="message" name="message" class="input" style="resize: none;height: 200px;font-size: 20px;"
+                    placeholder="Message"></textarea>
+                <button type="submit" class="bouton">SEND</button>
+            </form>
+            {% endif %}
         </div>
     </div>
 </body>

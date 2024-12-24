@@ -1,3 +1,4 @@
+import json
 from flask import Flask, Response, redirect, render_template, request, session, url_for
 import requests
 from dotenv import load_dotenv
@@ -35,8 +36,8 @@ def home():
         # récupération des différents paramètres 
         code = request.args.get('code')
         server_id = request.args.get('id')
-        webhook_id = request.args.get('webhook_id')          
-            
+        webhook_id = request.args.get('webhook_id')      
+        print(webhook_id)
         auth_response = authFlow(code) # gère l'authentification de l'utilisateur
         if auth_response:
             return auth_response
@@ -48,15 +49,21 @@ def home():
             webHooks = showGuildWebHooks(guilds_owned, server_id)
             if type(webHooks) == Response:
                 return webHooks
-        
-        if (webHooks):
+        print("pas normal")
+        if (webHooks and webhook_id):
+            print(1)
+            print(webHooks[int(webhook_id)][3])
+            return render_template("index.html", guilds=icons,webHooks=webHooks,webhook=webHooks[int(webhook_id)][3])
+        elif (webHooks):
+            print(1)
             return render_template("index.html", guilds=icons,webHooks=webHooks)
         else:
+            print(3)
             return render_template("index.html", guilds=icons)
-        
+            
     except:
         print("error !")
-        # return redirect("https://discord.com/oauth2/authorize?client_id=1317851690136764487&response_type=code&redirect_uri=http%3A%2F%2F192.168.1.18%2F&scope=guilds")
+    #     # return redirect("https://discord.com/oauth2/authorize?client_id=1317851690136764487&response_type=code&redirect_uri=http%3A%2F%2F192.168.1.18%2F&scope=guilds")
     return render_template("index.html")
 
 @app.route('/send', methods=['POST'])
@@ -132,9 +139,10 @@ def showGuildWebHooks(guilds_owned : list, server_id : int):
         webHooks = []
         id = 0
         for res in guildWebHooks:
-            if (res['type'] == 1): # vérifie si c'est un webhook pour envoyer des messages
+            if (res['type'] == 1 and 'url' in res): # vérifie si c'est un webhook pour envoyer des messages
                 avatar = getWebHookAvatar(res)
-                webHooks.append([id, res['name'], avatar])
+                print(json.dumps(guildWebHooks, indent=4))
+                webHooks.append([id, res['name'], avatar, res['url']])
                 id += 1
         return webHooks
             

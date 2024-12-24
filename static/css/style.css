@@ -170,3 +170,7 @@ form {
     border-radius: 16px;
     background-color: #5865f2;
 }
+
+.hidden {
+    display: none;
+}
